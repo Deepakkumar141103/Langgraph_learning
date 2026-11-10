@@ -40,7 +40,7 @@ def _get_retriever(thread_id: Optional[str]):
         return _THREAD_RETRIEVERS[thread_id]
     return None
 
-
+## iss function se hame retreiver milega phle pdf upload hua to usko save kiya then pyPDF se usko load kiya then usko split kiya then har split ka embeding bna kr FAISS me store kr liye then uska retreiver bna liya then uss retreiver ko uske thread id ke ath store kr liye and thread metadata me bhi kuch store and then return len doc and some info
 def ingest_pdf(file_bytes: bytes, thread_id: str, filename: Optional[str] = None) -> dict:
     """
     Build a FAISS retriever for the uploaded PDF and store it for the thread.
@@ -137,7 +137,7 @@ def get_stock_price(symbol: str) -> dict:
     r = requests.get(url)
     return r.json()
 
-
+#RAG ko hum as tool use kr rhe jab user message aaya LLM ko lga RAG needed to woh uss thread id se related retriever nikala and uss retreiver ko use krke context mil gya ab llm uske liye response generate krega and message me ai message me store kr dega 
 @tool
 def rag_tool(query: str, thread_id: Optional[str] = None) -> dict:
     """
@@ -176,10 +176,10 @@ class ChatState(TypedDict):
 # -------------------
 # 5. Nodes
 # -------------------
-def chat_node(state: ChatState, config=None):
+def chat_node(state: ChatState, config=None):## agr kisi function ke andr config ko use krna hai to usse accept krna pdega 
     """LLM node that may answer or request a tool call."""
     thread_id = None
-    if config and isinstance(config, dict):
+    if config and isinstance(config, dict): # this will check if config exists and it is dict
         thread_id = config.get("configurable", {}).get("thread_id")
 
     system_message = SystemMessage(
@@ -192,8 +192,8 @@ def chat_node(state: ChatState, config=None):
         )
     )
 
-    messages = [system_message, *state["messages"]]
-    response = llm_with_tools.invoke(messages, config=config)
+    messages = [system_message, *state["messages"]]## dekho state[message] me teen list hai to agr 8 nhi lagaye to message me ek system message and ek list jisme 3 list but agr 8 lagaye to 4 message bss 
+    response = llm_with_tools.invoke(messages, config=config) ## yhn config bss langsmith k wjh se pass kiye 
     return {"messages": [response]}
 
 
